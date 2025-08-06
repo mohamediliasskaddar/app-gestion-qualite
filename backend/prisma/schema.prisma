@@ -1,0 +1,55 @@
+// This is your Prisma schema file, file : prisma/schema.prisma 
+//output   = "./generated/prisma"
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//here are my entities 
+
+model Mesure {
+  id           Int            @id @default(autoincrement())
+  reference    String         // ex: "HR:00047"
+  dateMesure   DateTime
+  taille       String?        // Nullable : peut être absent
+  mesuresMoules MesureMoule[] // Relation 1-N avec MesureMoule
+}
+
+model Moule {
+  id           Int            @id @default(autoincrement())
+  reference    String         // ex: "M-A001"
+  nbPlateaux   Int            // 1 ou 2
+  mesuresMoules MesureMoule[] // Relation 1-N avec MesureMoule
+}
+
+model MesureMoule {
+  id          Int       @id @default(autoincrement())
+  quota       Float
+  margeInf    Float
+  margeSup    Float
+  unite       String    
+
+  // Relations
+  mesureId    Int
+  mouleId     Int
+
+  mesure      Mesure    @relation(fields: [mesureId], references: [id])
+  moule       Moule     @relation(fields: [mouleId], references: [id])
+  pieces      Piece[]   // 1-N relation with Piece
+}
+
+model Piece {
+  id               Int     @id @default(autoincrement())
+  numero           Int     // n° de la pièce (1 à 100)
+  valeurPlateau1   Float
+  valeurPlateau2   Float?  // Nullable si 1 seul plateau
+
+  // Relation
+  mesureMouleId    Int
+  mesureMoule      MesureMoule @relation(fields: [mesureMouleId], references: [id])
+}
