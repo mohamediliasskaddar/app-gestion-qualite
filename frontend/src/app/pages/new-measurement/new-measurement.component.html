@@ -1,0 +1,100 @@
+<form [formGroup]="measurementForm" (ngSubmit)="onSubmit()">
+
+  <!-- Section 1 : Infos générales  -->
+  <section>
+    <h3>1. Infos générales</h3>
+
+  <label>Sélectionne une référence de mesure</label>
+  <select formControlName="selectedMesureId">
+  <option [ngValue]="null">Choisir une ref</option>
+  <option *ngFor="let m of allMesures" [ngValue]="m.id">{{ m.reference }}</option>
+</select>
+
+  <div *ngIf="selectedMesure">  
+    <label>Date  : 
+      <p>{{ selectedMesure.dateMesure | date:'dd/MM/yyyy' }}</p>
+    </label>
+    <label>Taille  :
+      <p>{{ selectedMesure.taille }}</p>
+    </label>
+  </div>
+
+    <div class="man-general-info" *ngIf="!selectedMesure">
+      <label>Référence  
+        <input formControlName="reference" />
+      </label>
+      <label>Date  
+        <input type="date" formControlName="dateMesure" />
+      </label>
+      <label>Taille  
+        <input formControlName="taille" placeholder="ex: 20cm" />
+      </label>
+    </div>
+  </section>
+
+  <!-- Section 2 : Mesures Moules -->
+  <section>
+    <h3>2. Ajouter un moule</h3>
+    <button type="button" (click)="addMesureMoule()"> Ajouter un moule ( Quota )</button>
+
+    <div formArrayName="mesuresMoules">
+      <div *ngFor="let gm of mesuresMoules.controls; let i = index" [formGroupName]="i" class="moule-block">
+
+        <h4>Moule #{{ i+1 }}</h4>
+        <button type="button" (click)="removeMesureMoule(i)">Supprimer</button>
+
+        <label>Moule  
+          <select formControlName="mouleId" (change)="initPieces(i)">
+            <option [ngValue]="null">-- Choisir --</option>
+            <option *ngFor="let m of allMoules" [ngValue]="m.id">{{ m.reference }}</option>
+          </select>
+        </label>
+
+        <div *ngIf="gm.get('mouleId')!.value">
+            <label>Nombre plateaux  
+              <input type="number" formControlName="nbPlateaux" (change)="initPieces(i)" min="1" max="2"/>
+            </label>
+            <label>Quota  
+              <input type="number" formControlName="quota" />
+            </label>
+            <label>Marge inf  
+              <input type="number" formControlName="margeInf" />
+            </label>
+            <label>Marge sup  
+              <input type="number" formControlName="margeSup" />
+            </label>
+            <label>Unité  
+              <input formControlName="unite" />
+            </label>
+        
+
+        <!-- Section 3 : Tableau des pièces -->
+        <div formArrayName="pieces" *ngIf="gm.get('pieces')">
+          <h3>3. Saisie des quotas de pièces</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Plateau 1</th>
+                <th *ngIf="gm.value.nbPlateaux === 2">Plateau 2</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let p of getPiecesArray(gm).controls; let j = index" [formGroupName]="j">
+                <td>{{ p.value.numero }}</td>
+                <td><input formControlName="valeurPlateau1" type="number" /></td>
+                <td *ngIf="gm.value.nbPlateaux === 2">
+                <input formControlName="valeurPlateau2" type="number" />
+                </td>
+            </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <button type="submit">Créer la mesure</button>
+</form>

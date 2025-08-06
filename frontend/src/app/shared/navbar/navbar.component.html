@@ -1,0 +1,25 @@
+<div class="navbar">
+
+  <button
+   (click)="navigate('/')" 
+   [class.active]="isActive('/')">home
+  </button>
+
+  <button
+   (click)="navigate('/new-mesure')" 
+   [class.active]="isActive('/new-mesure')">new mesure
+  </button>
+
+  <button
+   (click)="navigate('/new-mold')" 
+   [class.active]="isActive('/new-mold')">new mold
+  </button>
+  
+  <button
+   (click)="navigate('/mesure-info')" 
+   [class.active]="isActive('/mesure-info')"> mesure info
+  </button>
+
+
+
+</div>

@@ -1,0 +1,30 @@
+<h2>Mesure Information</h2>
+<div class="selection">
+ <section >
+    <div class="selectMesure">
+        <label>Sélectionne une référence de mesure</label>
+        <select class="form-select" [(ngModel)]="selectedMesure" >
+        <option [ngValue]="null">Choisir une ref</option>
+        <option *ngFor="let m of allMesures" [ngValue]="m">{{ m.reference }}</option>
+        </select>
+
+        <div *ngIf="selectedMesure">  
+            <label>Date :
+                <p>{{ selectedMesure.dateMesure }}</p>
+            </label>
+            <label>Taille :
+                <p>{{ selectedMesure.taille }}</p>
+            </label>
+        </div>
+    </div>
+    <div class="selectMoule" *ngIf="selectedMesure">
+        <label >slectionner la moule concernee</label>
+        <select class="form-select" [(ngModel)]="selectedMoule" >
+            <option [ngValue]="null">Choisir une moule</option>
+            <option *ngFor="let m of allMoules" [ngValue]="m">{{ m.reference }}</option>
+        </select>
+        <div *ngIf="selectedMoule">
+        </div>  
+    </div>
+ </section>
+</div>

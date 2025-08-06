@@ -1,0 +1,41 @@
+<div class="new-moule-container">
+  <h2>Ajouter un nouveau moule</h2>
+
+  <form [formGroup]="mouleForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="reference">Référence du moule</label>
+      <input
+        id="reference"
+        type="text"
+        formControlName="reference"
+        [class.invalid]="mouleForm.get('reference')?.invalid && mouleForm.get('reference')?.touched"
+      />
+      <div class="error" *ngIf="mouleForm.get('reference')?.hasError('required') && mouleForm.get('reference')?.touched">
+        La référence est obligatoire.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nbPlateaux">Nombre de plateaux</label>
+      <input
+        id="nbPlateaux"
+        type="number"
+        formControlName="nbPlateaux"
+        min="1"
+        max="2"
+        [class.invalid]="mouleForm.get('nbPlateaux')?.invalid && mouleForm.get('nbPlateaux')?.touched"
+      />
+      <div class="error" *ngIf="mouleForm.get('nbPlateaux')?.hasError('required') && mouleForm.get('nbPlateaux')?.touched">
+        Le nombre de plateaux est obligatoire.
+      </div>
+      <div class="error" *ngIf="mouleForm.get('nbPlateaux')?.hasError('min') || mouleForm.get('nbPlateaux')?.hasError('max')">
+        Doit être 1 ou 2.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="isSubmitting">Créer le moule</button>
+  </form>
+
+  <div class="message success" *ngIf="successMsg">{{ successMsg }}</div>
+  <div class="message error" *ngIf="errorMsg">{{ errorMsg }}</div>
+</div>
